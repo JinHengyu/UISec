@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>demo</title>
+  <script src="./components/uis-alert.js"></script>
+  <!-- <script src="./confirm.js"></script> -->
+
+</head>
+
+<body>
+
+  <h2>Secure Modal web component with vanilla JS.</h2>
+
+  <!-- <pp-modal>
+    <button slot="display" data-modal-click>open modal</button>
+    <h1 slot="header">Information Box</h1>
+
+    <div slot="content">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+      aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+    </div>
+  </pp-modal> -->
+
+
+
+
+  <script>
+    (async () => {
+
+      await customElements.get('uis-alert').makeAlert({
+        title: 'hello world',
+        content: '沙发上案是否撒娇福哦啊接我我啊数据库数据库撒娇了暗示卡了那是就拿上框架抗裂砂浆那是进来撒进来看撒娇你看加沙拉酱罚款数据恢复加上阿喀琉斯那就好那是啊可能是卡号发阿嘎科技馆空间撒华开始爱上你暗示'
+      });
+
+      console.log('user clicked the close button');
+    })();
+  </script>
+
+
+
+
+
+</body>
+
+</html>
