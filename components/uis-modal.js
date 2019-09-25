@@ -11,30 +11,38 @@
 
 
     // 或者叫shadowRootId
-    const uuid = Symbol();
+    const shadowId = Symbol();
 
 
 
-    window.customElements.define('uis-alert', class extends window.HTMLElement {
+    window.customElements.define('uis-modal', class extends window.HTMLElement {
 
 
 
         // 静态：通用的工具函数
 
         // 提示帮助文档
-        static wiki() {
+        // console.table或者直接打印对象
 
-            // console.table或者直接打印对象
 
-            window.console.table([{ a: 123, b: 56 }, { a: 1, b: 2 }])
-
+        static get wiki() {
+            console.table({
+                version: { info: '0.1' },
+                description: { info: '这是一个modal组件' },
+                makeAlert: {
+                    info: '创建alert的快捷方式',
+                    params: 'title: string, content: string',
+                    return: 'Promise'
+                },
+                '...': { info: '...' },
+            });
         }
 
 
 
         // 快速创建一个modal
-        static makeAlert({ title = 'Title', content = 'Content', z = 10 }) {
-            const modal = window.document.createElement('uis-alert')
+        static async makeAlert({ title = 'Title', content = 'Content', z = 10 }) {
+            const modal = window.document.createElement('uis-modal')
             modal._title = title;
             modal._content = content;
 
@@ -47,7 +55,7 @@
                 'zIndex': z,
             });
             window.document.body.appendChild(modal)
-            return new Promise(resolve => {
+            await new Promise(resolve => {
                 modal._closeButtonCallback = () => {
                     modal.remove();
                     resolve(new Date());
@@ -61,18 +69,9 @@
         constructor() {
             super();
 
-            this[uuid] = this.attachShadow({ mode: 'closed' })
+            this[shadowId] = this.attachShadow({ mode: 'closed' })
 
-
-
-            // svg的width和height可以任意缩放
-            // 关闭按钮：一个叉叉
-            const closeIconSvg = `
-                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21.9 21.9" enable-background="new 0 0 21.9 21.9">
-                    <path fill="white" d="M14.1,11.3c-0.2-0.2-0.2-0.5,0-0.7l7.5-7.5c0.2-0.2,0.3-0.5,0.3-0.7s-0.1-0.5-0.3-0.7l-1.4-1.4C20,0.1,19.7,0,19.5,0  c-0.3,0-0.5,0.1-0.7,0.3l-7.5,7.5c-0.2,0.2-0.5,0.2-0.7,0L3.1,0.3C2.9,0.1,2.6,0,2.4,0S1.9,0.1,1.7,0.3L0.3,1.7C0.1,1.9,0,2.2,0,2.4  s0.1,0.5,0.3,0.7l7.5,7.5c0.2,0.2,0.2,0.5,0,0.7l-7.5,7.5C0.1,19,0,19.3,0,19.5s0.1,0.5,0.3,0.7l1.4,1.4c0.2,0.2,0.5,0.3,0.7,0.3  s0.5-0.1,0.7-0.3l7.5-7.5c0.2-0.2,0.5-0.2,0.7,0l7.5,7.5c0.2,0.2,0.5,0.3,0.7,0.3s0.5-0.1,0.7-0.3l1.4-1.4c0.2-0.2,0.3-0.5,0.3-0.7  s-0.1-0.5-0.3-0.7L14.1,11.3z"/>
-                </svg> `;
-
-            this[uuid].innerHTML = `
+            this[shadowId].innerHTML = `
         <style>
             /* The Modal (background) */
             #modal-outer {
@@ -146,28 +145,35 @@
 
         </style>
 
-        
+        <!-- 放在其他style元素之后以达到覆盖的目的 -->
         <style id="customStyle"> </style>
 
 
         <div id="modal-outer">
             <div id="modal-inner">
                 <div id="modal-header">
-                    <span id="close">${closeIconSvg}</span>
+                    <img id="close">
                     <h1 id="title">Title</h1>
                 </div>
                 <div id="content"> 
                     Content
                 <div>
             </div>
-        </div>   `
+        </div>   `;
         }
 
 
 
 
         connectedCallback() {
-            this._closeButton = this[uuid].querySelector("#close");
+
+            this[shadowId].querySelector('img#close').src = `
+                    data:image/svg+xml;utf8,<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21.9 21.9" enable-background="new 0 0 21.9 21.9">
+                    <path fill="white" d="M14.1,11.3c-0.2-0.2-0.2-0.5,0-0.7l7.5-7.5c0.2-0.2,0.3-0.5,0.3-0.7s-0.1-0.5-0.3-0.7l-1.4-1.4C20,0.1,19.7,0,19.5,0  c-0.3,0-0.5,0.1-0.7,0.3l-7.5,7.5c-0.2,0.2-0.5,0.2-0.7,0L3.1,0.3C2.9,0.1,2.6,0,2.4,0S1.9,0.1,1.7,0.3L0.3,1.7C0.1,1.9,0,2.2,0,2.4  s0.1,0.5,0.3,0.7l7.5,7.5c0.2,0.2,0.2,0.5,0,0.7l-7.5,7.5C0.1,19,0,19.3,0,19.5s0.1,0.5,0.3,0.7l1.4,1.4c0.2,0.2,0.5,0.3,0.7,0.3  s0.5-0.1,0.7-0.3l7.5-7.5c0.2-0.2,0.5-0.2,0.7,0l7.5,7.5c0.2,0.2,0.5,0.3,0.7,0.3s0.5-0.1,0.7-0.3l1.4-1.4c0.2-0.2,0.3-0.5,0.3-0.7  s-0.1-0.5-0.3-0.7L14.1,11.3z"/>
+                </svg> `;
+
+
+            this._closeButton = this[shadowId].querySelector("#close");
 
 
             // 有可能有多个关闭按钮
@@ -175,8 +181,6 @@
 
             this._closeButton.onclick = this.remove.bind(this);
 
-            // 修改自身样式需要像外部发请求
-            // this.style.left='10px';
         }
 
 
@@ -191,27 +195,27 @@
         // 所有对外暴露的接口
 
         // 用户可覆盖的css
-        get _customStyle() {
-            return this[uuid].querySelector('style#customStyle').innerHTML;
+        get customStyle() {
+            return this[shadowId].querySelector('style#customStyle').innerHTML;
         }
-        set _customStyle(newStyle) {
-            this[uuid].querySelector('style#customStyle').innerHTML = newStyle;
+        set customStyle(newStyle) {
+            this[shadowId].querySelector('style#customStyle').innerHTML = newStyle;
         }
 
 
 
         get _title() {
-            return this[uuid].querySelector('#title').innerHTML;
+            return this[shadowId].querySelector('#title').innerHTML;
         }
         set _title(title) {
-            this[uuid].querySelector('#title').innerHTML = title;
+            this[shadowId].querySelector('#title').innerHTML = title;
         }
 
         get _content() {
-            return this[uuid].querySelector('#content').innerHTML;
+            return this[shadowId].querySelector('#content').innerHTML;
         }
         set _content(content) {
-            this[uuid].querySelector('#content').innerHTML = content;
+            this[shadowId].querySelector('#content').innerHTML = content;
         }
 
         set _closeButtonCallback(callback) {
@@ -220,6 +224,8 @@
 
             // delete this;
         }
+
+
 
 
 
