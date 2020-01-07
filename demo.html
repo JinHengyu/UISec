@@ -2,32 +2,13 @@
 <html>
 
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <title>demo</title>
-  <script src="./components/uis-modal.js"></script>
-  <!-- <script src="./confirm.js"></script> -->
-
-</head>
-
-<body>
-
-  <h2>Secure Modal web component with vanilla JS.</h2>
-
-  <!-- <pp-modal>
-    <button slot="display" data-modal-click>open modal</button>
-    <h1 slot="header">Information Box</h1>
-
-    <div slot="content">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
-      aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-    </div>
-  </pp-modal> -->
 
 
+  <script type="module">
+
+    import './components/uis-modal.js';
 
 
-  <script>
     (async () => {
 
       await customElements.get('uis-modal').makeAlert({
@@ -37,12 +18,16 @@
 
       console.log('user clicked the close button');
     })();
+
+
+
+
   </script>
 
+</head>
 
-
-
-
+<body>
+  <h2>Secure Modal web component with vanilla JS.</h2>
 </body>
 
 </html>

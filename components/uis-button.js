@@ -48,7 +48,7 @@
 
 
         connectedCallback() {
-
+this[shadowId];
         }
 
 
